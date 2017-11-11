@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Owl</string>
+    <string name="sample_address">No 35, Pullair kovil road \n Matale</string>
+    <string name="preference_file_key">com.score.senz.PREFERENCE_FILE_KEY</string>
+    <string name="new_senz">SenZ received</string>
+    <string name="action_bar_settings">Settings</string>
+    <string name="action_bar_invite">Invite</string>
+    <string name="action_bar_permissions">Permissions</string>
+    <string name="action_bar_profile">Profile</string>
+    <string name="invite_user_id">User ID</string>
+    <string name="invite_button_text">VIA USERNAME</string>
+    <string name="invite_text_part_1">Is there someone who would like to share secrets with you? \n\nInvite via his/her phone book contact</string>
+    <string name="invite_text_part_2">like to share a</string>
+    <string name="invite_text_part_3">secret</string>
+    <string name="invite_text_part_4">with you?</string>
+    <string name="about_rahasak">"Rahasak is a secure way to share your smartphone sensors such as keyboard, microphone, GPS and camera with your trusted friends.\n\nThen they can get your location, Selfies, and Secrets without revealing it to the rest of the world"</string>
+    <string name="about_rahasak1">"Rahasak is an innovative application that helps you to share your secrets such as voice calls, texts, location information, and selfies without revealing it to the rest of the world.\n\nIt never saves your secrets in its’ servers. Rahasak encrypts your confidential information between you and your trusted friends and therefore no one sees it."</string>
+    <string name="perm_allowed_Text">Allowed Permissions: </string>
+    <string name="perm_location">Location </string>
+    <string name="perm_camera">Camera </string>
+    <string name="user_perm_card">user_perm_card</string>
+    <string name="default_user_image">default_user_image</string>
+    <string name="enter_secret_here_hint">Enter your secret here...</string>
+    <string name="register_welcome_text">Welcome</string>
+    <string name="register_button_text">Continue</string>
+    <string name="register_user_id">Username</string>
+    <string name="home_page_tab_one">Rahas</string>
+    <string name="home_page_tab_two">Friends</string>
+    <string name="no_registered_user">No Registered User. You must be a registered User to use this App.</string>
+    <string name="perm_mic">Mic</string>
+    <string name="no_internet">No Network Connection</string>
+    <string name="sorry">Sorry!!</string>
+    <string name="is_busy_now">is busy right now.</string>
+    <string name="photo_request">Incomming selfie request from :</string>
+    <string name="sound_request">Incoming mic request from :</string>
+    <string name="rahasak">Rahasak</string>
+    <string name="connecting_with_server_error">Connection with server...</string>
+</resources>
