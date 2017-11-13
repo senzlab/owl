@@ -175,7 +175,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         // bind to senz service
         registerReceiver(senzReceiver, IntentProvider.getIntentFilter(IntentType.SENZ));
 
-        refreshSecretList();
+        //refreshSecretList();
     }
 
     @Override
@@ -201,7 +201,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        }
 
-        dbSource.deleteAllSecretsExceptLast(secretUser.getUsername());
+        //dbSource.deleteAllSecretsExceptLast(secretUser.getUsername());
     }
 
     protected void bindToService() {
@@ -413,7 +413,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             // create secret
             Secret secret = new Secret(secretMsg, BlobType.TEXT, secretUser, false);
-            Long timestamp = System.currentTimeMillis() / 1000;
+            Long timestamp = System.currentTimeMillis();
             secret.setTimeStamp(timestamp);
             secret.setId(SenzUtils.getUid(this, timestamp.toString()));
             secret.setDeliveryState(DeliveryState.PENDING);

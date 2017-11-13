@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.score.rahasak.R;
+import com.score.rahasak.pojo.Owl;
 import com.score.rahasak.utils.ActivityUtils;
 
 import java.text.SimpleDateFormat;
@@ -151,13 +152,17 @@ public class NewOwlActivity extends BaseActivity implements DatePickerDialog.OnD
     }
 
     private void onClickPreview() {
-        String amount = amountEditText.getText().toString().trim();
+        String from = userEditText.getText().toString().trim();
+        String to = amountEditText.getText().toString().trim();
         String date = dateEditText.getText().toString().trim();
-        if (amount.isEmpty() || date.isEmpty()) {
+        String amount = amountEditText.getText().toString().trim();
+        String desc = descEditText.getText().toString().trim();
+        if (from.isEmpty() || to.isEmpty() || date.isEmpty()) {
             Toast.makeText(this, "Empty fields", Toast.LENGTH_LONG).show();
         } else {
             //ActivityUtils.showProgressDialog(this, "Generating cheque...");
             Intent intent = new Intent(this, OwlListActivity.class);
+            intent.putExtra("OWL", new Owl("senz", from, to, date, desc));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }

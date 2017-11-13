@@ -1,12 +1,10 @@
 package com.score.rahasak.ui;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -14,7 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.score.rahasak.R;
+import com.score.rahasak.db.SenzorsDbSource;
+import com.score.rahasak.enums.BlobType;
+import com.score.rahasak.enums.DeliveryState;
 import com.score.rahasak.pojo.Owl;
+import com.score.rahasak.pojo.Secret;
+import com.score.rahasak.pojo.SecretUser;
+import com.score.rahasak.utils.SenzUtils;
 
 import java.util.ArrayList;
 
@@ -27,9 +31,10 @@ public class OwlListActivity extends AppCompatActivity {
 
     private ListView expenseListView;
     private OwlListAdapter contactListAdapter;
-    private ArrayList<Owl> owlList;
-    private FloatingActionButton newButton;
     private Typeface typeface;
+
+    private Owl owl;
+    private ArrayList<Owl> owlList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,7 @@ public class OwlListActivity extends AppCompatActivity {
 
         initToolbar();
         initActionBar();
+        initPrefs();
         initList();
     }
 
@@ -75,6 +81,10 @@ public class OwlListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    private void initPrefs() {
+        owl = getIntent().getParcelableExtra("OWL");
+    }
+
     private void initList() {
         expenseListView = (ListView) findViewById(R.id.list);
         expenseListView.setTextFilterEnabled(false);
@@ -90,9 +100,46 @@ public class OwlListActivity extends AppCompatActivity {
         expenseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // todo[wait till learning db and encryption] go to view contact activity
+                onOwlClick(owlList.get(position));
             }
         });
+    }
+
+    private void onOwlClick(Owl clickedOwl) {
+        // create user
+        SecretUser secretUser = new SecretUser("id", clickedOwl.getUsername());
+        SenzorsDbSource dbSource = new SenzorsDbSource(this);
+        if (!dbSource.isExistingUser(secretUser.getUsername())) {
+            dbSource.createSecretUser(secretUser);
+
+            // my secrets
+            Long t1 = System.currentTimeMillis();
+            String myBlob = owl.getDesc() + "\n" +
+                    "From: " + owl.getFrom() + "\n" +
+                    "To: " + owl.getTo() + "\n" +
+                    "Date: " + owl.getDate();
+            Secret mySecret = new Secret(myBlob, BlobType.TEXT, secretUser, false);
+            mySecret.setDeliveryState(DeliveryState.NONE);
+            mySecret.setTimeStamp(t1);
+            mySecret.setId(SenzUtils.getUid(this, t1.toString()));
+            dbSource.createSecret(mySecret);
+
+            // friend secrets
+            Long t2 = System.currentTimeMillis();
+            String friendBlob = clickedOwl.getDesc() + "\n" +
+                    "From: " + clickedOwl.getFrom() + "\n" +
+                    "To: " + clickedOwl.getTo() + "\n" +
+                    "Date: " + clickedOwl.getDate();
+            Secret friendSecret = new Secret(friendBlob, BlobType.TEXT, secretUser, true);
+            friendSecret.setDeliveryState(DeliveryState.NONE);
+            friendSecret.setTimeStamp(t2);
+            friendSecret.setId(SenzUtils.getUid(this, t2.toString()));
+            dbSource.createSecret(friendSecret);
+        }
+
+        Intent intent = new Intent(OwlListActivity.this, ChatActivity.class);
+        intent.putExtra("SENDER", clickedOwl.getUsername());
+        startActivity(intent);
     }
 
 }

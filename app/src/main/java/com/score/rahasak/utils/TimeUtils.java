@@ -18,11 +18,11 @@ public class TimeUtils {
             calendar.setTime(now);
             int nowDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-            Date pre = new Date(timestamp * 1000);
+            Date pre = new Date(timestamp);
             calendar.setTime(pre);
             int preDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-            long deltaSeconds = now.getTime() / 1000 - timestamp;
+            long deltaSeconds = now.getTime() / 1000 - timestamp / 1000;
 
             if (deltaSeconds < 10) {
                 // just now
@@ -35,13 +35,13 @@ public class TimeUtils {
                 time = deltaSeconds / 60 + " minutes ago";
             } else if (nowDay - preDay == 0) {
                 // today
-                time = TIME_FORMAT.format(new Date(timestamp * 1000));
+                time = TIME_FORMAT.format(new Date(timestamp));
             } else if (nowDay - preDay == 1) {
                 // yesterday
-                time = "Yesterday, " + TIME_FORMAT.format(new Date(timestamp * 1000));
+                time = "Yesterday, " + TIME_FORMAT.format(new Date(timestamp));
             } else {
                 // before yesterday
-                time = DATE_TIME_FORMAT.format(new Date(timestamp * 1000));
+                time = DATE_TIME_FORMAT.format(new Date(timestamp));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
