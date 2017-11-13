@@ -73,7 +73,7 @@ public class SplashActivity extends BaseActivity {
 
     private void navigateRegistration() {
         // no user, so move to registration
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, DrawerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         overridePendingTransition(R.anim.right_in, R.anim.right_out);

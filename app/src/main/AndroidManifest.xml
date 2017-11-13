@@ -91,12 +91,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.score.rahasak.ui.NewOwlActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyMaterialTheme"
-            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name="com.score.rahasak.ui.OwlListActivity"

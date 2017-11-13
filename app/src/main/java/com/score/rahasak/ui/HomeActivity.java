@@ -47,7 +47,7 @@ public class HomeActivity extends BaseActivity {
         newDeliveryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, NewOwlActivity.class);
+                Intent intent = new Intent(HomeActivity.this, NewOwlFragment.class);
                 startActivity(intent);
             }
         });
@@ -55,7 +55,7 @@ public class HomeActivity extends BaseActivity {
         newTourLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, NewOwlActivity.class);
+                Intent intent = new Intent(HomeActivity.this, NewOwlFragment.class);
                 startActivity(intent);
             }
         });

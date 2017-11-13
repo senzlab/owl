@@ -65,14 +65,14 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         initDrawerList();
 
         // load initial fragment
-        loadRahas();
+        loadDelivery();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent.hasExtra("SENDER")) {
-            loadFriends();
+            //loadFriends();
         }
     }
 
@@ -120,9 +120,10 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
         // initialize drawer content
         // need to determine selected item according to the currently selected sensor type
         drawerItemList = new ArrayList();
-        drawerItemList.add(new DrawerItem("Secrets", R.drawable.rahaslogo, R.drawable.rahaslogo, true));
-        drawerItemList.add(new DrawerItem("Friends", R.drawable.rahaslogo, R.drawable.rahaslogo, false));
-        drawerItemList.add(new DrawerItem("Invite", R.drawable.rahaslogo, R.drawable.rahaslogo, false));
+        drawerItemList.add(new DrawerItem("New Deliver", R.drawable.rahaslogo, R.drawable.rahaslogo, true));
+        drawerItemList.add(new DrawerItem("New Receive", R.drawable.rahaslogo, R.drawable.rahaslogo, false));
+        drawerItemList.add(new DrawerItem("My Deliveries", R.drawable.rahaslogo, R.drawable.rahaslogo, false));
+        drawerItemList.add(new DrawerItem("My Receives", R.drawable.rahaslogo, R.drawable.rahaslogo, false));
 
         drawerAdapter = new DrawerAdapter(this, drawerItemList);
         drawerListView = (ListView) findViewById(R.id.drawer);
@@ -172,9 +173,9 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onTransition(String type) {
         if (type.equalsIgnoreCase("secret")) {
-            loadRahas();
+            loadDelivery();
         } else if (type.equalsIgnoreCase("friends")) {
-            loadFriends();
+            loadReceive();
         } else if (type.equalsIgnoreCase("invite")) {
             loadInvite();
         }
@@ -192,9 +193,9 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
             drawerLayout.closeDrawer(drawerContainer);
 
             if (position == 0) {
-                loadRahas();
+                loadDelivery();
             } else if (position == 1) {
-                loadFriends();
+                loadReceive();
             } else if (position == 2) {
                 loadInvite();
             }
@@ -204,15 +205,15 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * Load my sensor list fragment
      */
-    private void loadRahas() {
-        titleText.setText("Secrets");
+    private void loadDelivery() {
+        titleText.setText("New delivery");
         clearAboutText();
 
         unSelectDrawerItems();
         drawerItemList.get(0).setSelected(true);
         drawerAdapter.notifyDataSetChanged();
 
-        SecretListFragment fragment = new SecretListFragment();
+        NewOwlFragment fragment = new NewOwlFragment();
 
         // fragment transitions
         // Replace whatever is in the fragment_container view with this fragment,
@@ -225,15 +226,15 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * Load my sensor list fragment
      */
-    private void loadFriends() {
-        titleText.setText("Friends");
+    private void loadReceive() {
+        titleText.setText("New receive");
         clearAboutText();
 
         unSelectDrawerItems();
         drawerItemList.get(1).setSelected(true);
         drawerAdapter.notifyDataSetChanged();
 
-        FriendListFragment fragment = new FriendListFragment();
+        NewOwlFragment fragment = new NewOwlFragment();
 
         // fragment transitions
         // Replace whatever is in the fragment_container view with this fragment,
@@ -244,7 +245,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void loadInvite() {
-        titleText.setText("Invite");
+        titleText.setText("My Deliveries");
         clearAboutText();
 
         unSelectDrawerItems();
@@ -262,7 +263,7 @@ public class DrawerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void loadAbout() {
-        titleText.setText("About");
+        titleText.setText("My receives");
         selectAboutText();
 
         drawerLayout.closeDrawer(drawerContainer);

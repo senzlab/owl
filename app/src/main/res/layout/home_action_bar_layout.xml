@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/header_border_bottom">
 
     <ImageView
@@ -28,7 +28,7 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/delete"
+        android:id="@+id/done"
         android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -37,6 +37,6 @@
         android:adjustViewBounds="true"
         android:padding="4dp"
         android:scaleType="fitXY"
-        android:src="@drawable/bin"
-        android:visibility="gone" />
+        android:src="@drawable/done"
+        android:visibility="visible" />
 </RelativeLayout>

@@ -4,14 +4,17 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.score.rahasak.R;
@@ -22,9 +25,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class NewOwlActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener {
+public class NewOwlFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    private static final String TAG = NewOwlActivity.class.getName();
+    private static final String TAG = NewOwlFragment.class.getName();
+
+    protected Typeface typeface;
 
     // ui controls
     private EditText userEditText;
@@ -35,46 +40,30 @@ public class NewOwlActivity extends BaseActivity implements DatePickerDialog.OnD
     private Button sendButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_owl_activity_layout);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.new_owl_activity_layout, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         initPrefs();
         initUi();
-        initToolbar();
         initActionBar();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Log.d(TAG, "Bind to senz service");
-        bindToService();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        // unbind from service
-        if (isServiceBound) {
-            Log.d(TAG, "Unbind to senz service");
-            unbindService(senzServiceConnection);
-
-            isServiceBound = false;
-        }
     }
 
     private void initPrefs() {
     }
 
     private void initUi() {
-        userEditText = (EditText) findViewById(R.id.new_cheque_username);
-        amountEditText = (EditText) findViewById(R.id.new_cheque_amount);
-        dateEditText = (EditText) findViewById(R.id.new_cheque_date);
-        offerEditText = (EditText) findViewById(R.id.new_cheque_offer);
-        descEditText = (EditText) findViewById(R.id.desc);
+        typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/GeosansLight.ttf");
+
+        userEditText = (EditText) getActivity().findViewById(R.id.new_cheque_username);
+        amountEditText = (EditText) getActivity().findViewById(R.id.new_cheque_amount);
+        dateEditText = (EditText) getActivity().findViewById(R.id.new_cheque_date);
+        offerEditText = (EditText) getActivity().findViewById(R.id.new_cheque_offer);
+        descEditText = (EditText) getActivity().findViewById(R.id.desc);
 
         userEditText.setTypeface(typeface, Typeface.BOLD);
         amountEditText.setTypeface(typeface, Typeface.BOLD);
@@ -97,58 +86,29 @@ public class NewOwlActivity extends BaseActivity implements DatePickerDialog.OnD
                 onFocusDate();
             }
         });
-
-        sendButton = (Button) findViewById(R.id.new_cheque_send);
-        sendButton.setTypeface(typeface, Typeface.BOLD);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityUtils.hideSoftKeyboard(NewOwlActivity.this);
-                onClickPreview();
-            }
-        });
     }
 
     private void initActionBar() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setCustomView(getLayoutInflater().inflate(R.layout.new_cheque_header, null));
-        getSupportActionBar().setDisplayOptions(android.support.v7.app.ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-
-        // title
-        TextView titleText = (TextView) findViewById(R.id.title);
-        titleText.setTypeface(typeface, Typeface.BOLD);
-
-        // back button
-        ImageView backBtn = (ImageView) findViewById(R.id.back_btn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
         // done button
-        ImageView doneBtn = (ImageView) findViewById(R.id.done);
+        ImageView doneBtn = (ImageView) actionBar.getCustomView().findViewById(R.id.done);
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityUtils.hideSoftKeyboard(NewOwlActivity.this);
+                ActivityUtils.hideSoftKeyboard(getActivity());
                 onClickPreview();
             }
         });
     }
 
-    private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setCollapsible(false);
-        toolbar.setOverScrollMode(Toolbar.OVER_SCROLL_NEVER);
-        setSupportActionBar(toolbar);
-    }
-
     private void onFocusDate() {
-        DatePickerFragment fragment = new DatePickerFragment();
-        fragment.show(getSupportFragmentManager(), "date");
+        final Calendar cal = Calendar.getInstance();
+        DatePickerDialog datePicker = new DatePickerDialog(getActivity(), this,
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        datePicker.setCancelable(false);
+        datePicker.setTitle("Select the date");
+        datePicker.show();
     }
 
     private void onClickPreview() {
@@ -158,10 +118,10 @@ public class NewOwlActivity extends BaseActivity implements DatePickerDialog.OnD
         String amount = amountEditText.getText().toString().trim();
         String desc = descEditText.getText().toString().trim();
         if (from.isEmpty() || to.isEmpty() || date.isEmpty()) {
-            Toast.makeText(this, "Empty fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Empty fields", Toast.LENGTH_LONG).show();
         } else {
             //ActivityUtils.showProgressDialog(this, "Generating cheque...");
-            Intent intent = new Intent(this, OwlListActivity.class);
+            Intent intent = new Intent(getActivity(), OwlListActivity.class);
             intent.putExtra("OWL", new Owl("senz", from, to, date, desc));
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
