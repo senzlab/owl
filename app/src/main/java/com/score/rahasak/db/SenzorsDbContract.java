@@ -12,13 +12,13 @@ class SenzorsDbContract {
     public SenzorsDbContract() {
     }
 
-    static abstract class RecentSecret implements BaseColumns {
-        static final String TABLE_NAME = "recent_secret";
-        static final String COLUMN_TIMESTAMP = "timestamp";
-        static final String COLUMN_NAME_USER = "user";
-        static final String COLUMN_NAME_BLOB = "blob";
-        static final String COLUMN_BLOB_TYPE = "blob_type";
-        static final String UNREAD_COUNT = "unread_count";
+    static abstract class Owl implements BaseColumns {
+        static final String TABLE_NAME = "owl";
+        static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+        static final String COLUMN_NAME_FROM = "o_from";
+        static final String COLUMN_NAME_TO = "o_to";
+        static final String COLUMN_NAME_DATE = "date";
+        static final String COLUMN_NAME_DESC = "desc";
     }
 
     /* Inner class that defines secret table */

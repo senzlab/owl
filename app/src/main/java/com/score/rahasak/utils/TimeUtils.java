@@ -51,6 +51,6 @@ public class TimeUtils {
     }
 
     public static boolean isInOrder(long t1, long t2) {
-        return (t2 - t1) < 60 * 5;
+        return (t2 / 1000 - t1 / 1000) < 60 * 5;
     }
 }

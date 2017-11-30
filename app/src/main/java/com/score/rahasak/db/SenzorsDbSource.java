@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.score.rahasak.enums.BlobType;
 import com.score.rahasak.enums.DeliveryState;
+import com.score.rahasak.pojo.Owl;
 import com.score.rahasak.pojo.Permission;
 import com.score.rahasak.pojo.Secret;
 import com.score.rahasak.pojo.SecretUser;
@@ -34,6 +35,47 @@ public class SenzorsDbSource {
     public SenzorsDbSource(Context context) {
         Log.d(TAG, "Init: db source");
         this.context = context;
+    }
+
+    public void createOwl(Owl owl) {
+        SQLiteDatabase db = SenzorsDbHelper.getInstance(context).getWritableDatabase();
+
+        // content values to inset
+        ContentValues values = new ContentValues();
+        values.put(SenzorsDbContract.Owl.COLUMN_NAME_FROM, owl.getFrom());
+        values.put(SenzorsDbContract.Owl.COLUMN_NAME_TO, owl.getTo());
+        values.put(SenzorsDbContract.Owl.COLUMN_NAME_DATE, owl.getDate());
+        values.put(SenzorsDbContract.Owl.COLUMN_NAME_DESC, owl.getDesc());
+
+        // insert the new row, if fails throw an error
+        db.insertOrThrow(SenzorsDbContract.Owl.TABLE_NAME, null, values);
+    }
+
+    public ArrayList<Owl> getOwlList() {
+        SQLiteDatabase db = SenzorsDbHelper.getInstance(context).getReadableDatabase();
+        Cursor cursor = db.query(SenzorsDbContract.Owl.TABLE_NAME, // table
+                null, // columns
+                null,
+                null, // selection
+                null, // order by
+                null, // group by
+                null); // join
+
+        ArrayList<Owl> owlList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            int timestamp = cursor.getInt(cursor.getColumnIndex(SenzorsDbContract.Owl.COLUMN_NAME_TIMESTAMP));
+            String from = cursor.getString(cursor.getColumnIndex(SenzorsDbContract.Owl.COLUMN_NAME_FROM));
+            String to = cursor.getString(cursor.getColumnIndex(SenzorsDbContract.Owl.COLUMN_NAME_TO));
+            String date = cursor.getString(cursor.getColumnIndex(SenzorsDbContract.Owl.COLUMN_NAME_DATE));
+            String desc = cursor.getString(cursor.getColumnIndex(SenzorsDbContract.Owl.COLUMN_NAME_DESC));
+
+            Owl owl = new Owl("senz", from, to, date, desc);
+            owlList.add(owl);
+        }
+        cursor.close();
+
+        return owlList;
     }
 
     public boolean isExistingUser(String username) {

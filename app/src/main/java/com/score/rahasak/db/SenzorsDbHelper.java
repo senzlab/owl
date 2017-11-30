@@ -18,12 +18,22 @@ class SenzorsDbHelper extends SQLiteOpenHelper {
     private static SenzorsDbHelper senzorsDbHelper;
 
     // If you change the database schema, you must increment the database version
-    private static final int DATABASE_VERSION = 49;
-    private static final String DATABASE_NAME = "Rahasak.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "Owl.db";
 
     // data types, keywords and queries
     private static final String TEXT_TYPE = " TEXT";
     private static final String INT_TYPE = " INTEGER";
+
+    private static final String SQL_CREATE_OWL =
+            "CREATE TABLE " + SenzorsDbContract.Owl.TABLE_NAME + " (" +
+                    SenzorsDbContract.Owl._ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + ", " +
+                    SenzorsDbContract.Owl.COLUMN_NAME_TIMESTAMP + INT_TYPE + ", " +
+                    SenzorsDbContract.Owl.COLUMN_NAME_TO + TEXT_TYPE + ", " +
+                    SenzorsDbContract.Owl.COLUMN_NAME_FROM + TEXT_TYPE + ", " +
+                    SenzorsDbContract.Owl.COLUMN_NAME_DATE + TEXT_TYPE + ", " +
+                    SenzorsDbContract.Owl.COLUMN_NAME_DESC + TEXT_TYPE +
+                    " )";
 
     private static final String SQL_CREATE_SECRET =
             "CREATE TABLE " + SenzorsDbContract.Secret.TABLE_NAME + " (" +
@@ -65,8 +75,8 @@ class SenzorsDbHelper extends SQLiteOpenHelper {
                     SenzorsDbContract.Permission.COLUMN_NAME_IS_GIVEN + INT_TYPE +
                     " )";
 
-    private static final String SQL_DELETE_RECENT_SECRET =
-            "DROP TABLE IF EXISTS " + SenzorsDbContract.RecentSecret.TABLE_NAME;
+    private static final String SQL_DELETE_OWL =
+            "DROP TABLE IF EXISTS " + SenzorsDbContract.Owl.TABLE_NAME;
 
     private static final String SQL_ADD_COLUMN_UNREAD_SECRET_COUNT =
             "ALTER TABLE " + SenzorsDbContract.User.TABLE_NAME + " ADD COLUMN " +
@@ -104,12 +114,14 @@ class SenzorsDbHelper extends SQLiteOpenHelper {
      */
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "OnCreate: creating db helper, db version - " + DATABASE_VERSION);
+        Log.d(TAG, SQL_CREATE_OWL);
         Log.d(TAG, SQL_CREATE_USER);
         Log.d(TAG, SQL_CREATE_SECRET);
         Log.d(TAG, SQL_CREATE_PERMISSION);
 
-        db.execSQL(SQL_CREATE_SECRET);
+        db.execSQL(SQL_CREATE_OWL);
         db.execSQL(SQL_CREATE_USER);
+        db.execSQL(SQL_CREATE_SECRET);
         db.execSQL(SQL_CREATE_PERMISSION);
     }
 
@@ -136,7 +148,7 @@ class SenzorsDbHelper extends SQLiteOpenHelper {
             switch (version) {
                 case 47:
                     // delete recent secret
-                    db.execSQL(SQL_DELETE_RECENT_SECRET);
+                    db.execSQL(SQL_DELETE_OWL);
                     break;
                 case 48:
                     // update secret user with unread count

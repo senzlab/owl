@@ -11,35 +11,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.score.rahasak.R;
-import com.score.rahasak.enums.BlobType;
-import com.score.rahasak.pojo.Secret;
-import com.score.rahasak.utils.ImageUtils;
-import com.score.rahasak.utils.PhoneBookUtil;
-import com.score.rahasak.utils.TimeUtils;
+import com.score.rahasak.pojo.Owl;
 
 import java.util.ArrayList;
 
 class SecretListAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<Secret> userSecretList;
+    private ArrayList<Owl> owlList;
     private Typeface typeface;
 
-    SecretListAdapter(Context _context, ArrayList<Secret> secretList) {
-        this.context = _context;
-        this.userSecretList = secretList;
+    SecretListAdapter(Context context, ArrayList<Owl> owlList) {
+        this.context = context;
+        this.owlList = owlList;
 
         typeface = Typeface.createFromAsset(context.getAssets(), "fonts/GeosansLight.ttf");
     }
 
     @Override
     public int getCount() {
-        return userSecretList.size();
+        return owlList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return userSecretList.get(position);
+        return owlList.get(position);
     }
 
     @Override
@@ -58,7 +54,7 @@ class SecretListAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final ViewHolder holder;
-        final Secret secret = (Secret) getItem(i);
+        final Owl owl = (Owl) getItem(i);
 
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -83,56 +79,17 @@ class SecretListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        setUpRow(secret, holder);
+        setUpRow(owl, holder);
         return view;
     }
 
-    private void setUpRow(Secret secret, ViewHolder viewHolder) {
+    private void setUpRow(Owl owl, ViewHolder viewHolder) {
         // set username/name
-        if (secret.getUser().getPhone() != null && !secret.getUser().getPhone().isEmpty()) {
-            viewHolder.sender.setText(PhoneBookUtil.getContactName(context, secret.getUser().getPhone()));
-        } else {
-            viewHolder.sender.setText("@" + secret.getUser().getUsername());
-        }
-
-        if (secret.getBlobType() == BlobType.TEXT) {
-            viewHolder.message.setText("Message");
-        } else if (secret.getBlobType() == BlobType.IMAGE) {
-            viewHolder.message.setText("Selfie");
-        } else if (secret.getBlobType() == BlobType.MISSED_SELFIE) {
-            viewHolder.message.setText("Missed selfie");
-        } else if (secret.getBlobType() == BlobType.MISSED_CALL) {
-            viewHolder.message.setText("Missed call");
-        }
-
-        if (secret.getTimeStamp() != null) {
-            viewHolder.sentTime.setText(TimeUtils.getTimeInWords(secret.getTimeStamp()));
-        }
-
-        if (secret.getUser().getImage() != null) {
-            viewHolder.userImage.setImageBitmap(ImageUtils.decodeBitmap(secret.getUser().getImage()));
-        } else {
-            viewHolder.userImage.setImageResource(R.drawable.default_user);
-        }
-
-        // selected state
-        if (secret.isSelected()) {
-            viewHolder.selected.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.selected.setVisibility(View.GONE);
-        }
-
-        // unread secret count
-        if (secret.getUser().getUnreadSecretCount() > 0) {
-            viewHolder.sentTime.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-            viewHolder.sentTime.setTypeface(typeface, Typeface.BOLD);
-            viewHolder.unreadCount.setVisibility(View.VISIBLE);
-            viewHolder.unreadText.setText(secret.getUser().getUnreadSecretCount() + "");
-        } else {
-            viewHolder.sentTime.setTextColor(context.getResources().getColor(R.color.android_grey));
-            viewHolder.sentTime.setTypeface(typeface, Typeface.NORMAL);
-            viewHolder.unreadCount.setVisibility(View.GONE);
-        }
+        viewHolder.sender.setText(owl.getFrom() + " to " + owl.getTo());
+        viewHolder.message.setText(owl.getDesc());
+        viewHolder.sentTime.setText(owl.getDate());
+        viewHolder.userImage.setImageResource(R.drawable.default_user);
+        viewHolder.selected.setVisibility(View.GONE);
     }
 
     /**
